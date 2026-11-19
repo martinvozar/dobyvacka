@@ -1,0 +1,219 @@
+<title>Dobyvačka – návod</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout: one reading column on a wooden board ground; rules set as numbered sections, examples as small game tiles. */
+:root {
+  --bg: #f3ead9;          /* light board wood */
+  --paper: #fbf6ec;
+  --fg: #2b1d12;          /* outline brown from the game */
+  --muted: #6d5a47;
+  --line: #d9c7a8;
+  --blue: #2f6fc4;
+  --red: #c8463b;
+  --gold: #c99a1c;
+  --tile: #e3cfa6;
+  --display: "Alegreya SC", Georgia, serif;
+  --body: "Alegreya Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #241a12; --paper: #2f241a; --fg: #f1e6d3; --muted: #bba68c; --line: #4a3a2b;
+  --blue: #6ea4ee; --red: #f0796d; --gold: #e8bf4a; --tile: #5a4630; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #241a12; --paper: #2f241a; --fg: #f1e6d3; --muted: #bba68c; --line: #4a3a2b;
+  --blue: #6ea4ee; --red: #f0796d; --gold: #e8bf4a; --tile: #5a4630; color-scheme: dark }
+
+body { background: var(--bg); color: var(--fg); font: 17px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 64px; }
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 6vw, 3.2rem); letter-spacing: .02em; }
+h2 { font-size: 1.6rem; color: var(--fg); padding-bottom: 6px; border-bottom: 2px solid var(--line); }
+h3 { font-size: 1.15rem; margin-top: 6px; }
+p, ul, ol { margin: 0; }
+section { display: grid; gap: 12px; }
+ul, ol { padding-left: 1.3em; display: grid; gap: 4px; }
+.lead { color: var(--muted); font-size: 1.1rem; max-width: 62ch; }
+.blue { color: var(--blue); font-weight: 700; }
+.red { color: var(--red); font-weight: 700; }
+.gold { color: var(--gold); font-weight: 700; }
+kbd { font: 600 .85em var(--body); border: 1px solid var(--line); border-bottom-width: 3px; border-radius: 5px; padding: 0 6px; background: var(--paper); }
+.box { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 8px; }
+.box.warn { border-left: 5px solid var(--gold); }
+.formula { font-variant-numeric: tabular-nums; font-weight: 700; }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; min-width: 520px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--display); font-weight: 500; color: var(--muted); }
+.examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.ex { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: grid; gap: 4px; min-width: 0; }
+.ex b { font-family: var(--display); font-weight: 500; }
+.ex .res { font-weight: 700; }
+.win { color: #3f9a4a; } .lose { color: var(--muted); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .win { color: #7fd16b; } }
+:root[data-theme="dark"] .win { color: #7fd16b; }
+.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .95rem; }
+.toc a { color: var(--muted); }
+a { color: var(--blue); }
+</style>
+
+<main>
+  <header style="display:grid;gap:10px">
+    <h1>Dobyvačka</h1>
+    <p class="lead">Ťahová stratégia o hradoch a území pre dvoch hráčov. Rozširuj svoje územie, odrežeš súpera od hradov a dobyješ všetky jeho hrady. Hráš proti počítaču alebo s kamarátom na jednom počítači.</p>
+    <nav class="toc">
+      <a href="#spustenie">Spustenie</a><a href="#cieľ">Cieľ hry</a><a href="#ťah">Priebeh ťahu</a>
+      <a href="#akcie">Akcie</a><a href="#boj">Boj</a><a href="#zásobovanie">Zásobovanie</a>
+      <a href="#ekonomika">Ekonomika</a><a href="#ovládanie">Ovládanie</a><a href="#rady">Rady</a>
+    </nav>
+  </header>
+
+  <section id="spustenie">
+    <h2>Spustenie</h2>
+    <ol>
+      <li>Ulož súbor <b>Dobyvacka.exe</b> kamkoľvek, napríklad na plochu. Inštalácia ani Godot nie sú potrebné.</li>
+      <li>Spusti ho dvojklikom.</li>
+      <li>V menu zvoľ <b>Nová hra</b>, nastav hru a stlač <b>Hrať</b>.</li>
+    </ol>
+    <div class="box warn">
+      <p><b>Windows môže zobraziť varovanie „Windows chránil váš počítač“.</b> Súbor nie je digitálne podpísaný, preto ho SmartScreen nepozná. Klikni na <b>Ďalšie informácie</b> a potom <b>Spustiť aj tak</b>.</p>
+    </div>
+    <p>Rozohratá hra sa ukladá automaticky po každom konci ťahu. Pri ďalšom spustení ju obnovíš tlačidlom <b>Pokračovať</b>.</p>
+    <h3>Nastavenia novej hry</h3>
+    <ul>
+      <li><b>Režim:</b> proti počítaču alebo dvaja hráči na jednom PC.</li>
+      <li><b>Súper</b> (len proti počítaču):
+        <ul>
+          <li><b>Panoš</b> – ľahký. Hrá chamtivo, berie, čo je hneď po ruke, a nevidí tvoje hrozby.</li>
+          <li><b>Rytier</b> – stredný. Váži územie, zásobovanie, hrady aj to, čo mu môžeš v ďalšom ťahu vziať.</li>
+          <li><b>Vojvoda</b> – ťažký. Navyše sústreďuje rytierov: najprv ich presunie k cieľu a potom spoločne zaútočí.</li>
+        </ul>
+      </li>
+      <li><b>Začína:</b> ty, súper alebo náhodne.</li>
+      <li><b>Veľkosť mapy:</b> malá 12×9, stredná 16×12, veľká 20×14.</li>
+      <li><b>Počet hradov:</b> 3–4 na malej, 3–5 na strednej, 3–6 na veľkej mape.</li>
+      <li><b>Terén:</b> les, hory a jazerá. Bez neho je mapa samá pláň.</li>
+      <li><b>Dĺžka hry:</b> 20, 30 (predvolené), 40, 50 kôl alebo bez obmedzenia.</li>
+      <li><b>Verbovanie kdekoľvek:</b> voliteľné pravidlo, popísané v časti <a href="#akcie">Akcie</a>.</li>
+      <li><b>Seed:</b> číslo mapy. Rovnaký seed vždy vytvorí rovnakú mapu.</li>
+    </ul>
+  </section>
+
+  <section id="cieľ">
+    <h2>Cieľ hry</h2>
+    <p>Hráč <span class="blue">Modrý</span> a hráč <span class="red">Červený</span> začínajú s rovnakým počtom hradov. Každý vlastní len svoje hrady a políčka okolo nich, zvyšok mapy je neutrálny.</p>
+    <ul>
+      <li><b>Víťazstvo dobytím:</b> získaš posledný súperov hrad.</li>
+      <li><b>Vzdanie sa:</b> hráč, ktorý sa vzdá, prehráva.</li>
+      <li><b>Limit kôl</b> (predvolene 30, dá sa zmeniť alebo vypnúť): vyhráva ten, kto má viac políčok. Pri rovnosti rozhoduje viac hradov, potom je remíza.</li>
+    </ul>
+  </section>
+
+  <section id="ťah">
+    <h2>Priebeh ťahu</h2>
+    <ol>
+      <li><b>Príjem:</b> na začiatku ťahu dostaneš zlato (vzorec v časti <a href="#ekonomika">Ekonomika</a>).</li>
+      <li><b>Akcie:</b> verbuješ rytierov, hýbeš nimi a útočíš. Každý rytier spraví za ťah najviac jednu akciu. Akcie stoja zlato.</li>
+      <li><b>Koniec ťahu:</b> tlačidlo <b>Koniec ťahu</b> alebo <kbd>E</kbd>. Odrezanému územiu vtedy odpadne vonkajší prstenec (časť <a href="#zásobovanie">Zásobovanie</a>).</li>
+    </ol>
+    <p>Kým ťah neukončíš, akcie môžeš vracať tlačidlom <b>Späť</b> alebo <kbd>Z</kbd>.</p>
+  </section>
+
+  <section id="akcie">
+    <h2>Akcie</h2>
+    <p>Políčka susedia v ôsmich smeroch, teda aj šikmo. Toto susedstvo platí pre všetky pravidlá.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Akcia</th><th>Cena</th><th>Podmienky</th></tr></thead>
+      <tbody>
+        <tr><td><b>Verbovanie</b></td><td>2 <span class="gold">●</span>, na hore 3</td><td>Vlastné prázdne políčko, ktoré je hradom alebo susedí s tvojím hradom. Hrad nesmie byť obliehaný. Nesmieš byť na limite rytierov. Nový rytier koná až v ďalšom ťahu.</td></tr>
+        <tr><td><b>Presun</b></td><td>1 <span class="gold">●</span>, na horu 2</td><td>Rytier, ktorý ešte nekonal a je zásobovaný, sa posunie na susedné vlastné prázdne políčko.</td></tr>
+        <tr><td><b>Útok</b></td><td>1 <span class="gold">●</span>, na horu 2, + obliehanie</td><td>Rytier, ktorý ešte nekonal a je zásobovaný, útočí na susedné cudzie alebo neutrálne políčko. Pri výhre obranca zahynie, políčko je tvoje a útočník sa naň presunie.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Obliehaný hrad:</b> ak na niektorom susednom políčku hradu stojí súperov rytier, pri tomto hrade sa nedá verbovať.</p>
+    <p><b>Verbovanie kdekoľvek</b> (voľba pri novej hre): rytiera postavíš na ľubovoľné vlastné prázdne políčko, ktoré je zásobované a nesusedí so súperovým rytierom. Podmienka hradu vtedy neplatí.</p>
+    <p>Jazerom sa nedá prejsť ani na ňom stáť.</p>
+  </section>
+
+  <section id="boj">
+    <h2>Boj</h2>
+    <p>Boj nemá náhodu. Útok vyhrá, keď je <b>sila útoku väčšia ako obrana</b>. Rovnosť nestačí.</p>
+    <div class="box">
+      <p class="formula">Sila útoku = tvoji zásobovaní rytieri susediaci s cieľom + obliehanie</p>
+      <p class="formula">Obrana = terén + rytier na cieli (+1) + podpora (najviac +2) + hrad (+1)</p>
+      <p>Terén: pláň 0, les +1, hora +2. Podpora sú súperovi zásobovaní rytieri na susedných políčkach cieľa. Neutrálne políčko sa bráni len terénom.</p>
+    </div>
+    <p>Do sily útoku sa rátajú všetci tvoji susední rytieri, aj tí, čo už v tomto ťahu konali. Útočí však len jeden, ktorý ešte nekonal.</p>
+    <h3>Obliehanie</h3>
+    <p>K útoku si môžeš dokúpiť <b>+1 k sile za 3 zlata</b>, najviac <b>+2</b>. Hra vždy použije najmenšie obliehanie, ktoré stačí, a v predpovedi ukáže, koľko z útoku je obliehanie a celkovú cenu útoku (zlato sa ti odpočíta). Obliehanie prelomí zamknutý front: na rovnom fronte totiž dostaneš k cieľu najviac troch rytierov a dobre podporený obranca má tiež 3.</p>
+    <h3>Príklady</h3>
+    <div class="examples">
+      <div class="ex"><b>Neutrálna pláň</b><span>1 útočník proti 0</span><span class="res win">1 &gt; 0, výhra</span></div>
+      <div class="ex"><b>Neutrálny les</b><span>1 útočník proti 1</span><span class="res lose">nestačí, treba 2 rytierov</span></div>
+      <div class="ex"><b>Rytier na pláni, 2 podporovatelia</b><span>3 útočníci proti 1 + 2</span><span class="res lose">3 = 3, nestačí; s obliehaním +1 výhra</span></div>
+      <div class="ex"><b>Hrad s rytierom</b><span>4 útočníci proti 1 + 2 + 1</span><span class="res lose">4 = 4; s obliehaním +1 výhra</span></div>
+    </div>
+  </section>
+
+  <section id="zásobovanie">
+    <h2>Zásobovanie a obkľúčenie</h2>
+    <p>Políčko je <b>zásobované</b>, ak je cez tvoje vlastné políčka spojené s niektorým tvojím hradom. Jazerá spojenie prerušujú.</p>
+    <h3>Odrezané územie</h3>
+    <ul>
+      <li>Je šrafované. Políčka, ktoré na konci ťahu odpadnú, majú výstražnú ikonu.</li>
+      <li>Na konci tvojho ťahu odpadne jeho vonkajší prstenec. Odpadnuté políčko pripadne súperovi, ak s ním susedí, inak je neutrálne. Rytier na ňom zahynie.</li>
+      <li>Hlboké územie vydrží viac kôl. Ak spojenie s hradom obnovíš, rozpadávanie sa zastaví.</li>
+      <li>Odrezaní rytieri sa nemôžu hýbať ani útočiť a nedávajú podporu. Svoje políčko však bránia (+1).</li>
+    </ul>
+    <h3>Uzavretá zem</h3>
+    <p>Skupinu neutrálnych políčok, ktorú úplne obkolesia tvoje políčka, jazerá alebo okraj mapy, dostaneš zadarmo. Stačí jedno súperovo políčko pri skupine a uzavretá nie je. Unikne aj cez medzeru na uhlopriečke.</p>
+  </section>
+
+  <section id="ekonomika">
+    <h2>Ekonomika</h2>
+    <div class="box">
+      <p class="formula">Príjem = 4 + odmocnina z počtu zásobovaných políčok (zaokrúhlená nadol) + počet hradov</p>
+      <p class="formula">Limit rytierov = 2 × počet hradov + územie / 10 (zaokrúhlené nadol)</p>
+    </div>
+    <p>Nevyužité zlato sa prenáša do ďalšieho ťahu. Pred príjmom sa zníži na najviac 20, takže väčšie úspory prepadnú.</p>
+  </section>
+
+  <section id="ovládanie">
+    <h2>Ovládanie</h2>
+    <div class="table-wrap"><table>
+      <tbody>
+        <tr><td><b>Klik na prázdne políčko pri hrade</b></td><td>naverbuje rytiera</td></tr>
+        <tr><td><b>Klik na svojho rytiera</b></td><td>vyberie ho a ukáže ciele</td></tr>
+        <tr><td><b>Zelený rámik</b></td><td>presun</td></tr>
+        <tr><td><b>Červený rámik</b></td><td>víťazný útok (aj s obliehaním)</td></tr>
+        <tr><td><b>Sivý rámik</b></td><td>útok nestačí. Prejdi myšou nad cieľ a uvidíš predpoveď útok : obrana.</td></tr>
+        <tr><td><b>Zlatý kruh pod rytierom</b></td><td>rytier ešte môže konať</td></tr>
+        <tr><td><b>Vyblednutý rytier</b></td><td>rytier už konal alebo nemá kam ísť</td></tr>
+        <tr><td><b>Krúžok so stromčekmi / horou v rohu</b></td><td>rytier stojí v lese alebo na hore (terén by inak zakryla figúrka)</td></tr>
+        <tr><td><b>Žltý riadok v pravom paneli</b></td><td>ukáže, čo sa stane, keď klikneš na políčko pod myšou, a koľko to bude stáť (napr. „Klik: naverbovať rytiera (−2 zlata)“). Ak sa niečo nedá, napíše prečo.</td></tr>
+        <tr><td><b>Tooltip na údajoch hore</b></td><td>podrž myš nad zlatom, rytiermi, hradmi alebo územím: ukáže, koľko zlata dostaneš na začiatku ťahu a z čoho sa skladá, a ako sa počíta limit rytierov.</td></tr>
+        <tr><td><b>Tooltip v nastaveniach</b></td><td>podrž myš nad voľbou (napr. Terén), ukáže, čo robí.</td></tr>
+        <tr><td><kbd>E</kbd></td><td>koniec ťahu</td></tr>
+        <tr><td><kbd>Z</kbd></td><td>späť, len v rámci tvojho ťahu</td></tr>
+        <tr><td><kbd>Esc</kbd> / pravé tlačidlo</td><td>zruší výber; bez výberu otvorí pauzu</td></tr>
+        <tr><td>Šípky, <kbd>Enter</kbd></td><td>ovládanie klávesnicou</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="rady">
+    <h2>Rady na začiatok</h2>
+    <ul>
+      <li>Prvé kolá rýchlo zaberaj neutrálnu pláň. Každý rytier ju zoberie sám.</li>
+      <li>Les a hory zaberaj dvoma rytiermi. Potom sa dobre bránia.</li>
+      <li>Najsilnejší ťah je odrezať súperovi kus územia od hradu: začne sa rozpadať a jeho rytieri v ňom nemôžu konať.</li>
+      <li>Ak sa front zasekne, šetri zlato na obliehanie a útoč na miesta, kde sa k cieľu zmestí najviac tvojich rytierov.</li>
+      <li>Rytier vedľa súperovho hradu mu zastaví verbovanie.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Spätná väzba</h2>
+    <p>Hra je vo vývoji. Zapisuj si, čo bolo nejasné, čo ťa bavilo a čo pôsobilo nefér. Pomôže aj snímka obrazovky z problémovej situácie.</p>
+  </section>
+</main>
